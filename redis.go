@@ -3,6 +3,9 @@ package gfunc
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"log"
+	"reflect"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -12,18 +15,13 @@ type rdb struct {
 	r *redis.Client
 }
 
-type rdbInterface interface {
-	Set(key string, value interface{}) error
-	SetEx(key string, value interface{}, exp time.Duration) error
-}
-
-func NewRedis(r *redis.Client) rdbInterface {
+func NewRedis(r *redis.Client) *rdb {
 	return &rdb{
 		r: r,
 	}
 }
 
-func (r *rdb) Set(key string, value interface{}) error {
+func (r *rdb) SetJSON(key string, value interface{}) error {
 	v, err := json.Marshal(value)
 	if err != nil {
 		return err
@@ -38,7 +36,7 @@ func (r *rdb) Set(key string, value interface{}) error {
 	return err
 }
 
-func (r *rdb) SetEx(key string, value interface{}, exp time.Duration) error {
+func (r *rdb) SetExJSON(key string, value interface{}, exp time.Duration) error {
 	v, err := json.Marshal(value)
 	if err != nil {
 		return err
@@ -53,17 +51,33 @@ func (r *rdb) SetEx(key string, value interface{}, exp time.Duration) error {
 	return err
 }
 
-func (r *rdb) Get(key string, data interface{}) (interface{}, error) {
+func (r *rdb) GetJSON(key string, data interface{}) error {
 	ctx := context.Background()
 	v, err := r.r.Get(ctx, key).Result()
 	if err != nil {
-		return nil, err
-	}
-	
-	err = json.Unmarshal([]byte(v), data)
-	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return data, nil
+	if reflect.TypeOf(data).Kind() == reflect.Struct {
+		if reflect.TypeOf(data).Kind() != reflect.Ptr {
+			err := ErrMsg("data must be of type pointer if struct")
+			log.SetFlags(0)
+			log.Println(err)
+		}
+	}
+
+	err = json.Unmarshal([]byte(v), data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ErrMsg(err string) string {
+	const redColor = "\033[31m"
+	const resetColor = "\033[0m"
+
+	response := fmt.Sprintf("%serror%s: %s", redColor, resetColor, err)
+	return response
 }
