@@ -3,7 +3,6 @@ package gfunc
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"reflect"
 	"time"
@@ -74,10 +73,3 @@ func (r *Redis) GetJSON(key string, data interface{}) error {
 	return nil
 }
 
-func ErrMsg(err string) string {
-	const redColor = "\033[31m"
-	const resetColor = "\033[0m"
-
-	response := fmt.Sprintf("%serror%s: %s", redColor, resetColor, err)
-	return response
-}
