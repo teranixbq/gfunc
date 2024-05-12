@@ -38,16 +38,27 @@ func TestFindBy(t *testing.T) {
 
 	err := q.FindBy("3", "id", datalist, &selectedData)
 
-	datas := data{
-		Id:       selectedData.(map[string]interface{})["id"].(string),
-		Name:     selectedData.(map[string]interface{})["name"].(string),
-		Category: selectedData.(map[string]interface{})["category"].(string),
-	}
-
 	assert.NoError(t, errJson)
 	assert.NoError(t, err)
 	assert.NotNil(t, selectedData)
 	assert.NotEmpty(t, selectedData)
-	log.Println(datas)
+	
 }
 
+func TestFindAllBy(t *testing.T) {
+	findData := []data{}
+	var datalist []interface{}
+	var selectedData []interface{}
+	
+
+	q, errJson := NewJsonFile("example.json")
+	for _, item := range findData {
+		datalist = append(datalist, item)
+	}
+	err := q.FindAllBy("Fruit", "category", datalist,&selectedData)
+
+	assert.NoError(t, errJson)
+	assert.NoError(t, err)
+	assert.NotNil(t, findData)
+	log.Println(selectedData)
+}
