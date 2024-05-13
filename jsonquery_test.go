@@ -1,7 +1,6 @@
 package gfunc
 
 import (
-	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +15,7 @@ type data struct {
 func TestFind(t *testing.T) {
 	listData := []data{}
 
-	q, errJson := NewJsonFile("example.json")
+	q, errJson := NewJsonFile("_example/example.json")
 	err := q.Find(&listData)
 
 	assert.NoError(t, errJson)
@@ -29,9 +28,8 @@ func TestFindBy(t *testing.T) {
 	findData := []data{}
 	var datalist []interface{}
 	var selectedData interface{}
-	
 
-	q, errJson := NewJsonFile("example.json")
+	q, errJson := NewJsonFile("_example/example.json")
 	for _, item := range findData {
 		datalist = append(datalist, item)
 	}
@@ -42,23 +40,21 @@ func TestFindBy(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, selectedData)
 	assert.NotEmpty(t, selectedData)
-	
+
 }
 
 func TestFindAllBy(t *testing.T) {
 	findData := []data{}
 	var datalist []interface{}
 	var selectedData []interface{}
-	
 
-	q, errJson := NewJsonFile("example.json")
+	q, errJson := NewJsonFile("_example/example.json")
 	for _, item := range findData {
 		datalist = append(datalist, item)
 	}
-	err := q.FindAllBy("Fruit", "category", datalist,&selectedData)
+	err := q.FindAllBy("Fruit", "category", datalist, &selectedData)
 
 	assert.NoError(t, errJson)
 	assert.NoError(t, err)
 	assert.NotNil(t, findData)
-	log.Println(selectedData)
 }
