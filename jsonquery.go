@@ -68,10 +68,6 @@ func (q *Query) FindBy(by, field string, dataList []interface{}) (interface{}, e
 
 	}
 
-	if Selected == nil {
-		return nil, errors.New("data not found")
-	}
-
 	return Selected, nil
 }
 
