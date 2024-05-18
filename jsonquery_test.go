@@ -27,34 +27,33 @@ func TestFind(t *testing.T) {
 func TestFindBy(t *testing.T) {
 	findData := []data{}
 	var datalist []interface{}
-	var selectedData interface{}
 
 	q, errJson := NewJsonFile("_example/example.json")
 	for _, item := range findData {
 		datalist = append(datalist, item)
 	}
 
-	err := q.FindBy("3", "id", datalist, &selectedData)
+	result, err := q.FindBy("3", "id", datalist)
 
 	assert.NoError(t, errJson)
 	assert.NoError(t, err)
-	assert.NotNil(t, selectedData)
-	assert.NotEmpty(t, selectedData)
-
+	assert.NotNil(t, result)
+	assert.NotEmpty(t, result)
 }
 
 func TestFindAllBy(t *testing.T) {
 	findData := []data{}
 	var datalist []interface{}
-	var selectedData []interface{}
 
 	q, errJson := NewJsonFile("_example/example.json")
 	for _, item := range findData {
 		datalist = append(datalist, item)
 	}
-	err := q.FindAllBy("Fruit", "category", datalist, &selectedData)
+	result, err := q.FindAllBy("Fruit", "category", datalist)
 
 	assert.NoError(t, errJson)
 	assert.NoError(t, err)
 	assert.NotNil(t, findData)
+	assert.NotNil(t, result)
+	assert.NotEmpty(t, result)
 }
