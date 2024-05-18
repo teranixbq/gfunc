@@ -2,7 +2,6 @@ package gfunc
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 func (q *Query) Find(data interface{}) error {
@@ -100,10 +99,6 @@ func (q *Query) FindAllBy(by, field string, dataList []interface{}) ([]interface
 		if value == by {
 			Selected = append(Selected, v)
 		}
-	}
-
-	if len(Selected) == 0 {
-		return nil, errors.New("data not found")
 	}
 
 	return Selected, nil
